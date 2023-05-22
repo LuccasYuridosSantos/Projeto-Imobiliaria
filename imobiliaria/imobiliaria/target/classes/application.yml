@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: jdbc:sqlserver://localhost:1433;databaseName=imobiliaria
+    username: FATEC\1050482213001
+    password: 1234567
+  jpa:
+    database-platform: org.hibernate.dialect.SQLServer2012Dialect
+    generate-ddl: true
+    show-sql: true
+
