@@ -3,6 +3,7 @@ package br.gov.sp.fatec.pi.imobiliaria.repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -20,7 +21,7 @@ import br.gov.sp.fatec.pi.imobiliaria.model.Agendamento;
  * CRUD.
  */
 @Repository
-public interface AgendamentoRepository extends CrudRepository<Agendamento, Long>{
+public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> {
 
 	List<Agendamento> findByDataHora(final LocalDateTime dataHora);
 

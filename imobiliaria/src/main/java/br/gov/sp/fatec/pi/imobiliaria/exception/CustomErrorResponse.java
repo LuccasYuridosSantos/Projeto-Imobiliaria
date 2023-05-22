@@ -4,7 +4,7 @@ public class CustomErrorResponse {
     private String error;
     private String message;
 
-   CustomErrorResponse(final String error, final String message){
+   public CustomErrorResponse(final String error, final String message){
     this.error = error;
     this.message = message;
    }

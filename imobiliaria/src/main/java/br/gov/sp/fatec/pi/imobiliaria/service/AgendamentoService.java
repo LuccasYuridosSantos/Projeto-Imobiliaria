@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import br.gov.sp.fatec.pi.imobiliaria.exception.AgendamentoException;
@@ -77,6 +78,7 @@ public class AgendamentoService {
 	 * @param agendamento O agendamento a ser salvo.
 	 * @return O agendamento salvo.
 	 */
+	@Transactional(rollbackFor = Exception.class)
 	public Agendamento salvarAgendamento(Agendamento agendamento) {
 		if(agendamento.getDataHora().isBefore(LocalDateTime.now())){
 			throw AgendamentoException.periodoInvalido();

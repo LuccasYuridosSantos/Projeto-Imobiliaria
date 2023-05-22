@@ -40,21 +40,21 @@ public class Usuario {
 
     /**
      * Construtor que inicializa um usuário com nome, nome de usuário e senha.
+     * @param id O codigo de registro na base.
      * @param username O nome de usuário utilizado para realizar login.
      * @param senha A senha do usuário.
      */
-    public Usuario(String username, String senha) {
+    public Usuario(final Long id, final String username, final String senha) {
+        this.id = id;
         this.username = username;
         this.senha = senha;
     }
-
 
     public Long getId() {
         return id;
     }
 
-
-    public void setId(Long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 
@@ -62,19 +62,16 @@ public class Usuario {
         return username;
     }
 
-
-    public void setUsername(String username) {
+    public void setUsername(final String username) {
         this.username = username;
     }
-
 
     public String getSenha() {
         return senha;
     }
 
-    public void setSenha(String senha) {
+    public void setSenha(final String senha) {
         this.senha = senha;
     }
-
 }
 

@@ -1,5 +1,6 @@
 package br.gov.sp.fatec.pi.imobiliaria.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,6 +15,6 @@ import br.gov.sp.fatec.pi.imobiliaria.model.Usuario;
  * CRUD.
  */
 @Repository
-public interface UsuarioRepository extends CrudRepository<Usuario, Long> {
+public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
 }

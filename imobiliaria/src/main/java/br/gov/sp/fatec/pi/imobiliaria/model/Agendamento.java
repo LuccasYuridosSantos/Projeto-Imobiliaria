@@ -11,94 +11,93 @@ import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Agendamento {
-    
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    private LocalDateTime dataHora;
-    
-    @ManyToOne(cascade ={CascadeType.PERSIST, CascadeType.MERGE})
-    private Cliente cliente;
-    
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private Imovel imovel;
-    
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private Imobiliaria imobiliaria;
-    
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private AgenteImobiliario agenteImobiliario;
-    
-    private String descricao;
-    
-    public Agendamento(Long id, LocalDateTime dataHora, Cliente cliente, Imovel imovel, Imobiliaria imobiliaria, AgenteImobiliario agenteImobiliario, String descricao) {
-        this.id = id;
-        this.dataHora = dataHora;
-        this.cliente = cliente;
-        this.imovel = imovel;
-        this.imobiliaria = imobiliaria;
-        this.agenteImobiliario = agenteImobiliario;
-        this.descricao = descricao;
-    }
-    
-    public Agendamento() {
-    }    
-   
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    public Long getId() {
-		return id;
-	}
+  private LocalDateTime dataHora;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+  @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  private Cliente cliente;
 
-	public LocalDateTime getDataHora() {
-        return dataHora;
-    }
+  @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  private Imovel imovel;
 
-    public void setDataHora(LocalDateTime dataHora) {
-        this.dataHora = dataHora;
-    }
+  @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  private Imobiliaria imobiliaria;
 
-    public Cliente getCliente() {
-        return cliente;
-    }
+  @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  private Corretor corretor;
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
+  private String descricao;
 
-    public Imovel getImovel() {
-        return imovel;
-    }
+  public Agendamento() {
+  }
 
-    public void setImovel(Imovel imovel) {
-        this.imovel = imovel;
-    }
+  public Agendamento(final Long id, final LocalDateTime dataHora, final Cliente cliente, final Imovel imovel, final Imobiliaria imobiliaria, final Corretor corretor, final String descricao) {
+    this.id = id;
+    this.dataHora = dataHora;
+    this.cliente = cliente;
+    this.imovel = imovel;
+    this.imobiliaria = imobiliaria;
+    this.corretor = corretor;
+    this.descricao = descricao;
+  }
 
-    public Imobiliaria getImobiliaria() {
-        return imobiliaria;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public void setImobiliaria(Imobiliaria imobiliaria) {
-        this.imobiliaria = imobiliaria;
-    }
+  public void setId(final Long id) {
+    this.id = id;
+  }
 
-    public AgenteImobiliario getAgenteImobiliario() {
-        return agenteImobiliario;
-    }
+  public LocalDateTime getDataHora() {
+    return dataHora;
+  }
 
-    public void setAgenteImobiliario(AgenteImobiliario agenteImobiliario) {
-        this.agenteImobiliario = agenteImobiliario;
-    }
+  public void setDataHora(final LocalDateTime dataHora) {
+    this.dataHora = dataHora;
+  }
 
-    public String getDescricao() {
-        return descricao;
-    }
+  public Cliente getCliente() {
+    return cliente;
+  }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
+  public void setCliente(final Cliente cliente) {
+    this.cliente = cliente;
+  }
+
+  public Imovel getImovel() {
+    return imovel;
+  }
+
+  public void setImovel(final Imovel imovel) {
+    this.imovel = imovel;
+  }
+
+  public Imobiliaria getImobiliaria() {
+    return imobiliaria;
+  }
+
+  public void setImobiliaria(final Imobiliaria imobiliaria) {
+    this.imobiliaria = imobiliaria;
+  }
+
+  public Corretor getCorretor() {
+    return corretor;
+  }
+
+  public void setCorretor(final Corretor corretor) {
+    this.corretor = corretor;
+  }
+
+  public String getDescricao() {
+    return descricao;
+  }
+
+  public void setDescricao(final String descricao) {
+    this.descricao = descricao;
+  }
 }

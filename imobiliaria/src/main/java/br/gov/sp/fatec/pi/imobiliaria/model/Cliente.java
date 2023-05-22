@@ -14,14 +14,17 @@ public class Cliente {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade ={CascadeType.PERSIST, CascadeType.MERGE})
     private Endereco endereco;
     private String telefone;
     private String email;
     private TipoCliente tipoCliente;
     
     // Construtor da classe Cliente
-    public Cliente(Long id, String nome, Endereco endereco, String telefone, String email, TipoCliente tipoCliente) {
+    public Cliente() {
+    }
+
+    public Cliente(final Long id, final String nome, final Endereco endereco, final String telefone, final String email, final TipoCliente tipoCliente) {
         this.id = id;
         this.nome = nome;
         this.endereco = endereco;
@@ -29,58 +32,52 @@ public class Cliente {
         this.email = email;
         this.tipoCliente = tipoCliente;
     }
-    
-    public Cliente() {
-    }    
-    
-    
-    // Métodos getters e setters para todos os campos
+
     public Long getId() {
         return id;
     }
-    
-    public void setId(Long id) {
+
+    public void setId(final Long id) {
         this.id = id;
     }
-    
+
     public String getNome() {
         return nome;
     }
-    
-    public void setNome(String nome) {
+
+    public void setNome(final String nome) {
         this.nome = nome;
     }
-    
+
     public Endereco getEndereco() {
         return endereco;
     }
-    
-    public void setEndereco(Endereco endereco) {
+
+    public void setEndereco(final Endereco endereco) {
         this.endereco = endereco;
     }
-    
+
     public String getTelefone() {
         return telefone;
     }
-    
-    public void setTelefone(String telefone) {
+
+    public void setTelefone(final String telefone) {
         this.telefone = telefone;
     }
-    
+
     public String getEmail() {
         return email;
     }
-    
-    public void setEmail(String email) {
+
+    public void setEmail(final String email) {
         this.email = email;
     }
 
     public TipoCliente getTipoCliente() {
         return tipoCliente;
     }
-    
-    public void setTipoCliente(TipoCliente tipoCliente) {
+
+    public void setTipoCliente(final TipoCliente tipoCliente) {
         this.tipoCliente = tipoCliente;
     }
-    
 }

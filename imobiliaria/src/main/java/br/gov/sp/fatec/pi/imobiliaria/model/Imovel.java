@@ -12,28 +12,31 @@ public class Imovel {
     
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private Endereco endereco;
-    private int numQuartos;
-    private int numBanheiros;
-    private int numVagasGaragem;
-    private double area;
-    private double valorVenda;
-    private double valorAluguel;
-    private TipoImovel tipoImovel;
-    @ManyToOne(cascade = CascadeType.ALL)
-    private Cliente proprietario;
-    @ManyToOne(cascade = CascadeType.ALL)
-    private AgenteImobiliario agenteImobiliario;
-    @ManyToOne(cascade = CascadeType.ALL)
-    private Imobiliaria imobiliaria;
+	private Long id;
+
+	@ManyToOne(cascade ={CascadeType.PERSIST, CascadeType.MERGE})
+	private Endereco endereco;
+	private int numQuartos;
+	private int numBanheiros;
+	private int numVagasGaragem;
+	private double area;
+	private double valorVenda;
+	private double valorAluguel;
+	private TipoImovel tipoImovel;
+	@ManyToOne(cascade = CascadeType.ALL)
+	private Cliente proprietario;
+	@ManyToOne(cascade = CascadeType.ALL)
+	private Corretor corretor;
+	@ManyToOne(cascade = CascadeType.ALL)
+	private Imobiliaria imobiliaria;
     
 
 	// Construtor da classe Imovel
-	public Imovel(Long id, Endereco endereco, int numQuartos, int numBanheiros, int numVagasGaragem, double area,
-			double valorVenda, double valorAluguel, TipoImovel tipoImovel, Cliente proprietario,
-			AgenteImobiliario agenteImobiliario, Imobiliaria imobiliaria) {
-		super();
+
+	public Imovel() {
+	}
+
+	public Imovel(final Long id, final Endereco endereco, final int numQuartos, final int numBanheiros, final int numVagasGaragem, final double area, final double valorVenda, final double valorAluguel, final TipoImovel tipoImovel, final Cliente proprietario, final Corretor corretor, final Imobiliaria imobiliaria) {
 		this.id = id;
 		this.endereco = endereco;
 		this.numQuartos = numQuartos;
@@ -44,19 +47,15 @@ public class Imovel {
 		this.valorAluguel = valorAluguel;
 		this.tipoImovel = tipoImovel;
 		this.proprietario = proprietario;
-		this.agenteImobiliario = agenteImobiliario;
+		this.corretor = corretor;
 		this.imobiliaria = imobiliaria;
-	}	
-
-	public Imovel() {
-		super();
 	}
 
 	public Long getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(final Long id) {
 		this.id = id;
 	}
 
@@ -64,7 +63,7 @@ public class Imovel {
 		return endereco;
 	}
 
-	public void setEndereco(Endereco endereco) {
+	public void setEndereco(final Endereco endereco) {
 		this.endereco = endereco;
 	}
 
@@ -72,7 +71,7 @@ public class Imovel {
 		return numQuartos;
 	}
 
-	public void setNumQuartos(int numQuartos) {
+	public void setNumQuartos(final int numQuartos) {
 		this.numQuartos = numQuartos;
 	}
 
@@ -80,7 +79,7 @@ public class Imovel {
 		return numBanheiros;
 	}
 
-	public void setNumBanheiros(int numBanheiros) {
+	public void setNumBanheiros(final int numBanheiros) {
 		this.numBanheiros = numBanheiros;
 	}
 
@@ -88,7 +87,7 @@ public class Imovel {
 		return numVagasGaragem;
 	}
 
-	public void setNumVagasGaragem(int numVagasGaragem) {
+	public void setNumVagasGaragem(final int numVagasGaragem) {
 		this.numVagasGaragem = numVagasGaragem;
 	}
 
@@ -96,7 +95,7 @@ public class Imovel {
 		return area;
 	}
 
-	public void setArea(double area) {
+	public void setArea(final double area) {
 		this.area = area;
 	}
 
@@ -104,7 +103,7 @@ public class Imovel {
 		return valorVenda;
 	}
 
-	public void setValorVenda(double valorVenda) {
+	public void setValorVenda(final double valorVenda) {
 		this.valorVenda = valorVenda;
 	}
 
@@ -112,7 +111,7 @@ public class Imovel {
 		return valorAluguel;
 	}
 
-	public void setValorAluguel(double valorAluguel) {
+	public void setValorAluguel(final double valorAluguel) {
 		this.valorAluguel = valorAluguel;
 	}
 
@@ -120,7 +119,7 @@ public class Imovel {
 		return tipoImovel;
 	}
 
-	public void setTipoImovel(TipoImovel tipoImovel) {
+	public void setTipoImovel(final TipoImovel tipoImovel) {
 		this.tipoImovel = tipoImovel;
 	}
 
@@ -128,25 +127,24 @@ public class Imovel {
 		return proprietario;
 	}
 
-	public void setProprietario(Cliente proprietario) {
+	public void setProprietario(final Cliente proprietario) {
 		this.proprietario = proprietario;
 	}
 
-	public AgenteImobiliario getAgenteImobiliario() {
-		return agenteImobiliario;
+	public Corretor getCorretor() {
+		return corretor;
 	}
 
-	public void setAgenteImobiliario(AgenteImobiliario agenteImobiliario) {
-		this.agenteImobiliario = agenteImobiliario;
+	public void setCorretor(final Corretor corretor) {
+		this.corretor = corretor;
 	}
 
 	public Imobiliaria getImobiliaria() {
 		return imobiliaria;
 	}
 
-	public void setImobiliaria(Imobiliaria imobiliaria) {
+	public void setImobiliaria(final Imobiliaria imobiliaria) {
 		this.imobiliaria = imobiliaria;
 	}
-
 }
 

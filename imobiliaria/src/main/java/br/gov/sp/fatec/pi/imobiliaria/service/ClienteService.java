@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import br.gov.sp.fatec.pi.imobiliaria.model.Cliente;
 import br.gov.sp.fatec.pi.imobiliaria.repository.ClienteRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * A classe ClienteService representa um serviço que oferece operações
@@ -48,6 +49,7 @@ public class ClienteService {
 	 * @param cliente Cliente a ser salvo.
 	 * @return Cliente salvo.
 	 */
+	@Transactional(rollbackFor = Exception.class)
 	public Cliente salvar(Cliente cliente) {
 		return repository.save(cliente);
 	}
