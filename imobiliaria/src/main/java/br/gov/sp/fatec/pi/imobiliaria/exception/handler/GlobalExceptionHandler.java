@@ -26,6 +26,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UsuarioException.class)
     public ResponseEntity<CustomErrorResponse> handleAgendamentoException(UsuarioException ex) {
         CustomErrorResponse error = new CustomErrorResponse("Erro de usuario", ex.getMessage());
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(error, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 }

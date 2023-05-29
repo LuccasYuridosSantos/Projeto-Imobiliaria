@@ -1,98 +1,74 @@
 package br.gov.sp.fatec.pi.imobiliaria.controller;
 
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import br.gov.sp.fatec.pi.imobiliaria.model.Cliente;
+import br.gov.sp.fatec.pi.imobiliaria.model.vo.request.ClienteRequest;
+import br.gov.sp.fatec.pi.imobiliaria.model.vo.response.ClienteResponse;
+import br.gov.sp.fatec.pi.imobiliaria.service.ClienteService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.util.ObjectUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import br.gov.sp.fatec.pi.imobiliaria.model.Cliente;
-import br.gov.sp.fatec.pi.imobiliaria.service.ClienteService;
+import jakarta.validation.Valid;
 
 /**
  * A classe ClienteController representa o controlador REST para as operações
  * relacionadas à entidade Cliente.
  */
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/clientes")
 public class ClienteController {
 
-	@Autowired
-	private ClienteService clienteService;
+	private final ClienteService clienteService;
 
-	/**
-	 * Cria um novo cliente.
-	 * 
-	 * @param cliente O cliente a ser criado.
-	 * @return O objeto ResponseEntity com o novo cliente criado e o status HTTP
-	 *         CREATED.
-	 */
+	public ClienteController(final ClienteService clienteService) {
+		this.clienteService = clienteService;
+	}
+
 	@PostMapping
-	public ResponseEntity<Cliente> criarCliente(@RequestBody final Cliente cliente) {
-		Cliente novoCliente = clienteService.salvar(cliente);
+	public ResponseEntity<ClienteResponse> criarCliente(@RequestBody @Valid final ClienteRequest clienteRequest) {
+		final var novoCliente = clienteService.salvar(clienteRequest);
 		return new ResponseEntity<>(novoCliente, HttpStatus.CREATED);
 	}
 
-	/**
-	 * Busca um cliente pelo seu ID.
-	 * 
-	 * @param id O ID do cliente a ser buscado.
-	 * @return O objeto ResponseEntity com o cliente encontrado e o status HTTP OK,
-	 *         ou o status HTTP NOT_FOUND caso o cliente não seja encontrado.
-	 */
 	@GetMapping("/{id}")
-	public ResponseEntity<Cliente> buscarClientePorId(@PathVariable final Long id) {
-		final var cliente = clienteService.buscarPorId(id);
-		if (cliente.isPresent()) {
-			return new ResponseEntity<>(cliente.get(), HttpStatus.OK);
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	public ResponseEntity<ClienteResponse> buscarClientePorId(@PathVariable final Long id) {
+		final var response = clienteService.buscarPorId(id);
+		return response.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 
-	/**
-	 * Busca todos os clientes.
-	 * 
-	 * @return O objeto ResponseEntity com a lista de clientes encontrados e o
-	 *         status HTTP OK.
-	 */
 	@GetMapping
-	public ResponseEntity<List<Cliente>> buscarTodosClientes() {
-		List<Cliente> clientes = clienteService.buscarTodos();
-		return new ResponseEntity<>(clientes, HttpStatus.OK);
+	public ResponseEntity<Page<Cliente>> listaClientes(final Pageable pageable) {
+		return new ResponseEntity<>(clienteService.listarClientes(pageable), HttpStatus.OK);
 	}
 
-	/**
-	 * Atualiza um cliente existente.
-	 * 
-	 * @param id                O ID do cliente a ser atualizado.
-	 * @param clienteAtualizado O objeto Cliente atualizado.
-	 * @return O objeto ResponseEntity com o cliente atualizado e o status HTTP OK,
-	 *         ou o status HTTP NOT_FOUND caso o cliente não seja encontrado.
-	 */
+
 	@PutMapping("/{id}")
-	public ResponseEntity<Cliente> atualizarCliente(@PathVariable final Long id,
-			@RequestBody final Cliente clienteAtualizado) {
-		final var clienteExistente = clienteService.buscarPorId(id);
-		if (clienteExistente.isPresent()) {
-			clienteAtualizado.setId(id);
-			Cliente clienteAtualizadoSalvo = clienteService.atualizar(clienteAtualizado);
-			return new ResponseEntity<>(clienteAtualizadoSalvo, HttpStatus.OK);
+	public ResponseEntity<ClienteResponse> atualizarCliente(@PathVariable final Long id,
+			@RequestBody final ClienteRequest clienteRequest) {
+		final var clienteAtualizadoSalvo = clienteService.atualizar(id, clienteRequest);
+		if (ObjectUtils.isEmpty(clienteAtualizadoSalvo)) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(clienteAtualizadoSalvo, HttpStatus.OK);
 	}
 
-	/**
-	 * Remove um cliente existente.
-	 * 
-	 * @param id O ID do cliente a ser removido.
-	 * @return O objeto ResponseEntity com o status HTTP NO_CONTENT, ou o status
-	 *         HTTP NOT_FOUND caso o cliente não seja encontrado.
-	 */
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> removerCliente(@PathVariable final Long id) {
 		final var clienteExistente = clienteService.buscarPorId(id);
 		if (clienteExistente.isPresent()) {
-			clienteService.remover(clienteExistente);
+			clienteService.remover(id);
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);

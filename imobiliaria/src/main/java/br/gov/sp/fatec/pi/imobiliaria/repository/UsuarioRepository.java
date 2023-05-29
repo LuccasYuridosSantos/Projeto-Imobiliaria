@@ -1,10 +1,10 @@
 package br.gov.sp.fatec.pi.imobiliaria.repository;
 
+import br.gov.sp.fatec.pi.imobiliaria.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import br.gov.sp.fatec.pi.imobiliaria.model.Usuario;
+import java.util.Optional;
 
 /**
  * 
@@ -16,5 +16,7 @@ import br.gov.sp.fatec.pi.imobiliaria.model.Usuario;
  */
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
+
+  Optional<Usuario> findUsuarioByUsernameIgnoreCase(final String username);
 
 }

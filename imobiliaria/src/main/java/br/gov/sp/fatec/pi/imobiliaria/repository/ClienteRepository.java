@@ -1,10 +1,8 @@
 package br.gov.sp.fatec.pi.imobiliaria.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
-
 import br.gov.sp.fatec.pi.imobiliaria.model.Cliente;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * 

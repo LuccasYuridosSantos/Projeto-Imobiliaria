@@ -1,77 +1,79 @@
 package br.gov.sp.fatec.pi.imobiliaria.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-/**
- * A classe Usuario representa um usuário da aplicação.
- */
+
+import jakarta.persistence.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.stream.Collectors;
+
 @Entity
-@Table(name = "usuario")
-public class Usuario {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class Usuario implements UserDetails {
 
-    /**
-     * O id do usuário.
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * O nome de usuário utilizado para realizar login.
-     */
-    @Column(name = "username", length = 20, nullable = false, unique = true)
+    private String name;
+
     private String username;
 
-    /**
-     * A senha do usuário.
-     */
-    @Column(name = "senha", length = 100, nullable = false)
-    private String senha;
+    private String password;
 
-    /**
-     * Construtor padrão.
-     */
-    public Usuario() {}
+    @OneToOne
+    @JsonIgnore
+    private Cliente cliente;
 
-    /**
-     * Construtor que inicializa um usuário com nome, nome de usuário e senha.
-     * @param id O codigo de registro na base.
-     * @param username O nome de usuário utilizado para realizar login.
-     * @param senha A senha do usuário.
-     */
-    public Usuario(final Long id, final String username, final String senha) {
-        this.id = id;
-        this.username = username;
-        this.senha = senha;
+    @OneToOne
+    @JsonIgnore
+    private Imobiliaria imobiliaria;
+
+    private String authorities;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Arrays.stream(authorities.split(","))
+            .map(SimpleGrantedAuthority::new)
+            .collect(Collectors.toList());
     }
 
-    public Long getId() {
-        return id;
+    @Override
+    public String getPassword() {
+        return this.password;
     }
 
-    public void setId(final Long id) {
-        this.id = id;
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
     }
 
-    public String getUsername() {
-        return username;
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
     }
 
-    public void setUsername(final String username) {
-        this.username = username;
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
 
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(final String senha) {
-        this.senha = senha;
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
 

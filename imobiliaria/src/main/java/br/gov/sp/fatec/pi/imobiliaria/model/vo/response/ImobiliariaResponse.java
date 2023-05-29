@@ -1,23 +1,22 @@
-package br.gov.sp.fatec.pi.imobiliaria.model;
+package br.gov.sp.fatec.pi.imobiliaria.model.vo.response;
 
+import br.gov.sp.fatec.pi.imobiliaria.model.Endereco;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-import jakarta.persistence.*;
 import java.util.List;
 
-@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Imobiliaria {
+public class ImobiliariaResponse {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   private String nome;
@@ -28,12 +27,12 @@ public class Imobiliaria {
 
   private String email;
 
-  @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  @JsonIgnore
   private Endereco endereco;
 
-  @OneToMany(mappedBy = "imobiliaria", cascade = CascadeType.ALL)
-  private List<Corretor> corretores;
+  @JsonIgnore
+  private List<CorretorResponse> corretores;
 
-  @OneToOne
-  private Usuario usuario;
+  @JsonIgnore
+  private UsuarioResponse usuario;
 }
