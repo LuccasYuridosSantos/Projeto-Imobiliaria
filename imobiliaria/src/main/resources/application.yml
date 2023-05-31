@@ -1,17 +1,21 @@
+server:
+  error:
+    include-stacktrace: on_param
+
 spring:
-  logging:
-    level: DEBUG
   datasource:
-    driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/imobiliaria?useSSL=false&createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true
     username: root
     password: root
   jpa:
     hibernate:
       ddl-auto: update
-    database-platform: org.hibernate.dialect.MySQLDialect
-    generate-ddl: true
-    show-sql: true
-  liquibase:
-    change-log:
 
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+    springframework:
+      security: DEBUG

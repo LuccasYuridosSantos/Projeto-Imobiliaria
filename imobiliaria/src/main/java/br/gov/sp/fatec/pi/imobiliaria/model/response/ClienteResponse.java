@@ -1,28 +1,29 @@
-package br.gov.sp.fatec.pi.imobiliaria.model;
+package br.gov.sp.fatec.pi.imobiliaria.model.response;
 
+import br.gov.sp.fatec.pi.imobiliaria.model.Endereco;
+import br.gov.sp.fatec.pi.imobiliaria.model.TipoCliente;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.util.List;
 
 /**
- * A classe Cliente representa um cliente da imobiliária.
+ * A classe ClienteResponse representa a resposta de um cliente.
  */
-@Entity
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class Cliente {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class ClienteResponse {
 
     /**
      * O ID do cliente.
      */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
@@ -33,8 +34,7 @@ public class Cliente {
     /**
      * O endereço do cliente.
      */
-    @ManyToOne
-    @JoinColumn(name = "endereco_id")
+    @JsonIgnore
     private Endereco endereco;
 
     /**
@@ -43,34 +43,34 @@ public class Cliente {
     private String telefone;
 
     /**
-     * O email do cliente.
+     * O e-mail do cliente.
      */
     private String email;
 
     /**
-     * O tipo de cliente (pessoa física ou jurídica).
+     * O tipo do cliente.
      */
     private TipoCliente tipoCliente;
 
     /**
-     * O CPF do cliente (se for pessoa física).
+     * O CPF do cliente.
      */
     private String cpf;
 
     /**
-     * O CNPJ do cliente (se for pessoa jurídica).
+     * O CNPJ do cliente.
      */
     private String cnpj;
 
     /**
      * A lista de imóveis associados ao cliente.
      */
-    @OneToMany(mappedBy = "proprietario", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private List<Imovel> imoveis;
+    @JsonIgnore
+    private List<ImovelResponse> imoveis;
 
     /**
      * O usuário associado ao cliente.
      */
-    @OneToOne
-    private Usuario usuario;
+    @JsonIgnore
+    private UsuarioResponse usuario;
 }

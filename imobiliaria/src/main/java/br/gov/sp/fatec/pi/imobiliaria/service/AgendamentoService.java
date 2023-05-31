@@ -9,8 +9,8 @@ import br.gov.sp.fatec.pi.imobiliaria.mappers.ModelMappers;
 import br.gov.sp.fatec.pi.imobiliaria.model.Corretor;
 import br.gov.sp.fatec.pi.imobiliaria.model.Imobiliaria;
 import br.gov.sp.fatec.pi.imobiliaria.model.Imovel;
-import br.gov.sp.fatec.pi.imobiliaria.model.vo.request.AgendamentoRequest;
-import br.gov.sp.fatec.pi.imobiliaria.model.vo.response.AgendamentoResponse;
+import br.gov.sp.fatec.pi.imobiliaria.model.request.AgendamentoRequest;
+import br.gov.sp.fatec.pi.imobiliaria.model.response.AgendamentoResponse;
 import br.gov.sp.fatec.pi.imobiliaria.repository.ClienteRepository;
 import br.gov.sp.fatec.pi.imobiliaria.repository.CorretorRepository;
 import br.gov.sp.fatec.pi.imobiliaria.repository.ImobiliariaRepository;
@@ -19,16 +19,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import br.gov.sp.fatec.pi.imobiliaria.exception.AgendamentoException;
 import br.gov.sp.fatec.pi.imobiliaria.model.Agendamento;
 import br.gov.sp.fatec.pi.imobiliaria.repository.AgendamentoRepository;
 
+/**
+ * Classe de serviço para manipulação de agendamentos.
+ */
 @Service
 public class AgendamentoService {
-
 
 	public static final String CLIENTE_NAO_ENCONTRADO = "Cliente não encontrado";
 	public static final String CORRETOR_NAO_ENCONTRADO_PARA_O_AGENDAMENTO = "Corretor não encontrado para o agendamento";
@@ -38,14 +39,22 @@ public class AgendamentoService {
 	private final ClienteRepository clienteRepository;
 	private final ImobiliariaRepository imobiliariaRepository;
 	private final ImovelRepository imovelRepository;
-
 	private final CorretorRepository corretorRepository;
-
 	private final ModelMappers modelMappers;
 
+	/**
+	 * Construtor da classe AgendamentoService.
+	 *
+	 * @param agendamentoRepository    Repositório de agendamentos
+	 * @param clienteRepository        Repositório de clientes
+	 * @param imobiliariaRepository    Repositório de imobiliárias
+	 * @param imovelRepository         Repositório de imóveis
+	 * @param corretorRepository       Repositório de corretores
+	 * @param modelMappers             Mappers de modelos
+	 */
 	public AgendamentoService(final AgendamentoRepository agendamentoRepository, final ClienteRepository clienteRepository,
-														final ImobiliariaRepository imobiliariaRepository, final ImovelRepository imovelRepository,
-														final CorretorRepository corretorRepository, final ModelMappers modelMappers) {
+							  final ImobiliariaRepository imobiliariaRepository, final ImovelRepository imovelRepository,
+							  final CorretorRepository corretorRepository, final ModelMappers modelMappers) {
 		this.agendamentoRepository = agendamentoRepository;
 		this.clienteRepository = clienteRepository;
 		this.imobiliariaRepository = imobiliariaRepository;
@@ -54,40 +63,79 @@ public class AgendamentoService {
 		this.modelMappers = modelMappers;
 	}
 
+	/**
+	 * Verifica se um agendamento com a data e hora especificadas já existe.
+	 *
+	 * @param dataHora  Data e hora do agendamento
+	 * @return          true se o agendamento existe, false caso contrário
+	 */
 	public boolean agendamentoExiste(LocalDateTime dataHora) {
 		List<Agendamento> agendamentos = agendamentoRepository.findByDataHora(dataHora);
 		return !agendamentos.isEmpty();
 	}
 
+	/**
+	 * Busca todos os agendamentos para a data e hora especificadas.
+	 *
+	 * @param dataHora  Data e hora do agendamento
+	 * @return          Lista de agendamentos encontrados
+	 */
 	public List<AgendamentoResponse> buscarAgendamentos(LocalDateTime dataHora) {
 		List<Agendamento> agendamentos = agendamentoRepository.findAllFromDataHora(dataHora);
-		return  agendamentos.stream().map(modelMappers::map).collect(Collectors.toList());
+		return agendamentos.stream().map(modelMappers::map).collect(Collectors.toList());
 	}
 
+	/**
+	 * Verifica se um agendamento com o ID do cliente e do imóvel especificados já existe.
+	 *
+	 * @param clienteId  ID do cliente
+	 * @param imovelId   ID do imóvel
+	 * @return           true se o agendamento existe, false caso contrário
+	 */
 	public boolean agendamentoExiste(Long clienteId, Long imovelId) {
 		List<Agendamento> agendamentos = agendamentoRepository.findByClienteIdAndImovelId(clienteId, imovelId);
 		return !agendamentos.isEmpty();
 	}
 
-
+	/**
+	 * Busca um agendamento pelo ID.
+	 *
+	 * @param id  ID do agendamento
+	 * @return    Agendamento encontrado (opcional)
+	 */
 	public Optional<AgendamentoResponse> buscarAgendamentoPorId(final Long id) {
 		final var agendamento = agendamentoRepository.findById(id);
-		if(agendamento.isPresent()){
+		if (agendamento.isPresent()) {
 			return Optional.of(modelMappers.map(agendamento.get()));
 		}
 		return Optional.empty();
 	}
 
-
+	/**
+	 * Exclui um agendamento com o ID especificado.
+	 *
+	 * @param agendamento  ID do agendamento a ser excluído
+	 */
 	public void excluirAgendamento(final Long agendamento) {
 		agendamentoRepository.deleteById(agendamento);
 	}
 
-  public Page<AgendamentoResponse> listarAgendamentos(final Pageable pageable) {
+	/**
+	 * Retorna uma página de agendamentos no formato de resposta.
+	 *
+	 * @param pageable  Configurações da página
+	 * @return          Página de agendamentos
+	 */
+	public Page<AgendamentoResponse> listarAgendamentos(final Pageable pageable) {
 		return agendamentoRepository.findAll(pageable).map(modelMappers::map);
-  }
+	}
 
-	@Transactional(rollbackFor = Exception.class)
+	/**
+	 * Salva um novo agendamento com base nos dados fornecidos.
+	 *
+	 * @param request  Dados do agendamento a serem salvos
+	 * @return         Agendamento salvo (no formato de resposta)
+	 */
 	public AgendamentoResponse salvarAgendamento(final AgendamentoRequest request) {
 		verificaDataHoraAgendamento(request.getDataHora());
 		verificaAgendamentoExistente(request.getDataHora());
@@ -110,19 +158,19 @@ public class AgendamentoService {
 	}
 
 	private void verificaDataHoraAgendamento(LocalDateTime dataHora) {
-		if(dataHora.isBefore(LocalDateTime.now())) {
+		if (dataHora.isBefore(LocalDateTime.now())) {
 			throw AgendamentoException.periodoInvalido();
 		}
 	}
 
 	private void verificaAgendamentoExistente(LocalDateTime dataHora) {
-		if(!CollectionUtils.isEmpty(agendamentoRepository.findByDataHora(dataHora))) {
+		if (!CollectionUtils.isEmpty(agendamentoRepository.findByDataHora(dataHora))) {
 			throw AgendamentoException.agendamentoJaExistente();
 		}
 	}
 
 	private <T> T buscaEntidadePorId(JpaRepository<T, Long> repository, Long id, String mensagemErro) {
-		if(id != null) {
+		if (id != null) {
 			return repository.findById(id).orElseThrow(() -> AgendamentoException.naoEncontradoParaAgendamento(mensagemErro));
 		}
 		return null;

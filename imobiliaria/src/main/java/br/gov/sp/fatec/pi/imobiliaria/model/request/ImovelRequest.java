@@ -1,35 +1,30 @@
-package br.gov.sp.fatec.pi.imobiliaria.model;
+package br.gov.sp.fatec.pi.imobiliaria.model.request;
 
+import br.gov.sp.fatec.pi.imobiliaria.model.TipoImovel;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * A classe Imovel representa um imóvel.
+ * A classe ImovelRequest representa a solicitação de criação de um imóvel.
  */
-@Entity
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class Imovel {
-
-	/**
-	 * O ID do imóvel.
-	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class ImovelRequest {
 
 	/**
 	 * O endereço do imóvel.
 	 */
-	@ManyToOne
-	@JoinColumn(name = "endereco_id")
-	private Endereco endereco;
+	@NotNull
+	private EnderecoRequest endereco;
 
 	/**
 	 * O número de quartos do imóvel.
@@ -64,33 +59,27 @@ public class Imovel {
 	/**
 	 * O tipo de imóvel.
 	 */
-	@Enumerated(EnumType.STRING)
 	private TipoImovel tipoImovel;
 
 	/**
-	 * O proprietário do imóvel.
+	 * O código do proprietário do imóvel.
 	 */
-	@ManyToOne
-	@JoinColumn(name = "proprietario_id")
-	private Cliente proprietario;
+	@NotNull
+	private Long codProprietario;
 
 	/**
-	 * A imobiliária responsável pelo imóvel.
+	 * O código da imobiliária do imóvel.
 	 */
-	@ManyToOne
-	@JoinColumn(name = "imobiliaria_id")
-	private Imobiliaria imobiliaria;
+	private Long codImobiliaria;
 
 	/**
-	 * O locatário do imóvel.
+	 * O código do locatário do imóvel.
 	 */
-	@ManyToOne
-	@JoinColumn(name = "locatario_id")
-	private Cliente locatario;
+	private Long codLocatario;
 
 	/**
 	 * A lista de imagens do imóvel.
 	 */
-	@OneToMany
-	private List<Imagem> imagens;
+	@Valid
+	private List<ImagemRequest> imagens;
 }

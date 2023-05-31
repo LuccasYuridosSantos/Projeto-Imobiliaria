@@ -1,30 +1,28 @@
-package br.gov.sp.fatec.pi.imobiliaria.model;
+package br.gov.sp.fatec.pi.imobiliaria.model.response;
 
+import br.gov.sp.fatec.pi.imobiliaria.model.Endereco;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.util.List;
 
 /**
- * A classe Imobiliaria representa uma imobiliária.
+ * A classe ImobiliariaResponse representa a resposta de uma imobiliária.
  */
-@Entity
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Imobiliaria {
+public class ImobiliariaResponse {
 
   /**
    * O ID da imobiliária.
    */
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   /**
@@ -35,7 +33,6 @@ public class Imobiliaria {
   /**
    * O CNPJ da imobiliária.
    */
-  @Column(unique = true)
   private String cnpj;
 
   /**
@@ -44,28 +41,25 @@ public class Imobiliaria {
   private String telefone;
 
   /**
-   * O email da imobiliária.
+   * O e-mail da imobiliária.
    */
-  @Column(unique = true)
   private String email;
 
   /**
    * O endereço da imobiliária.
    */
-  @ManyToOne
-  @JoinColumn(name = "endereco_id")
+  @JsonIgnore
   private Endereco endereco;
 
   /**
    * A lista de corretores associados à imobiliária.
    */
-  @OneToMany(mappedBy = "imobiliaria")
-  private List<Corretor> corretores;
+  @JsonIgnore
+  private List<CorretorResponse> corretores;
 
   /**
    * O usuário associado à imobiliária.
    */
-  @OneToOne
-  @JoinColumn(name = "usuario_id")
-  private Usuario usuario;
+  @JsonIgnore
+  private UsuarioResponse usuario;
 }

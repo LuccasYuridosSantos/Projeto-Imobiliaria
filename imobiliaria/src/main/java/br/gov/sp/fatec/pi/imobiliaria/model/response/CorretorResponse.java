@@ -1,27 +1,25 @@
-package br.gov.sp.fatec.pi.imobiliaria.model;
+package br.gov.sp.fatec.pi.imobiliaria.model.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * A classe Corretor representa um corretor imobiliário.
+ * A classe CorretorResponse representa a resposta de um corretor.
  */
-@Entity
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class Corretor {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class CorretorResponse {
 
   /**
    * O ID do corretor.
    */
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   /**
@@ -30,9 +28,8 @@ public class Corretor {
   private String nome;
 
   /**
-   * O email do corretor.
+   * O e-mail do corretor.
    */
-  @Column(unique = true)
   private String email;
 
   /**
@@ -41,9 +38,8 @@ public class Corretor {
   private String telefone;
 
   /**
-   * A imobiliária à qual o corretor está associado.
+   * A imobiliária associada ao corretor.
    */
-  @ManyToOne
-  @JoinColumn(name = "imobiliaria_id")
-  private Imobiliaria imobiliaria;
+  @JsonIgnore
+  private ImobiliariaResponse imobiliaria;
 }
