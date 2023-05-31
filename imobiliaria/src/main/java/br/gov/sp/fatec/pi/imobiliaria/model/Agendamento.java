@@ -1,103 +1,72 @@
 package br.gov.sp.fatec.pi.imobiliaria.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-
+/**
+ * A classe Agendamento representa um agendamento de visita para um imóvel.
+ */
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Agendamento {
 
+  /**
+   * O ID do agendamento.
+   */
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  /**
+   * A data e hora do agendamento.
+   */
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private LocalDateTime dataHora;
 
-  @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  /**
+   * O cliente associado ao agendamento.
+   */
+  @ManyToOne
+  @JoinColumn(name = "cliente_id")
   private Cliente cliente;
 
-  @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  /**
+   * O imóvel associado ao agendamento.
+   */
+  @ManyToOne
+  @JoinColumn(name = "imovel_id")
   private Imovel imovel;
 
-  @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  /**
+   * A imobiliária associada ao agendamento.
+   */
+  @ManyToOne
+  @JoinColumn(name = "imobiliaria_id")
   private Imobiliaria imobiliaria;
 
-  @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  /**
+   * O corretor associado ao agendamento.
+   */
+  @ManyToOne
+  @JoinColumn(name = "corretor_id")
   private Corretor corretor;
 
+  /**
+   * A descrição do agendamento.
+   */
   private String descricao;
-
-  public Agendamento() {
-  }
-
-  public Agendamento(final Long id, final LocalDateTime dataHora, final Cliente cliente, final Imovel imovel, final Imobiliaria imobiliaria, final Corretor corretor, final String descricao) {
-    this.id = id;
-    this.dataHora = dataHora;
-    this.cliente = cliente;
-    this.imovel = imovel;
-    this.imobiliaria = imobiliaria;
-    this.corretor = corretor;
-    this.descricao = descricao;
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(final Long id) {
-    this.id = id;
-  }
-
-  public LocalDateTime getDataHora() {
-    return dataHora;
-  }
-
-  public void setDataHora(final LocalDateTime dataHora) {
-    this.dataHora = dataHora;
-  }
-
-  public Cliente getCliente() {
-    return cliente;
-  }
-
-  public void setCliente(final Cliente cliente) {
-    this.cliente = cliente;
-  }
-
-  public Imovel getImovel() {
-    return imovel;
-  }
-
-  public void setImovel(final Imovel imovel) {
-    this.imovel = imovel;
-  }
-
-  public Imobiliaria getImobiliaria() {
-    return imobiliaria;
-  }
-
-  public void setImobiliaria(final Imobiliaria imobiliaria) {
-    this.imobiliaria = imobiliaria;
-  }
-
-  public Corretor getCorretor() {
-    return corretor;
-  }
-
-  public void setCorretor(final Corretor corretor) {
-    this.corretor = corretor;
-  }
-
-  public String getDescricao() {
-    return descricao;
-  }
-
-  public void setDescricao(final String descricao) {
-    this.descricao = descricao;
-  }
 }

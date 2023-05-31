@@ -1,87 +1,71 @@
 package br.gov.sp.fatec.pi.imobiliaria.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.util.List;
 
+/**
+ * A classe Imobiliaria representa uma imobiliária.
+ */
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Imobiliaria {
 
+  /**
+   * O ID da imobiliária.
+   */
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  /**
+   * O nome da imobiliária.
+   */
   private String nome;
+
+  /**
+   * O CNPJ da imobiliária.
+   */
+  @Column(unique = true)
   private String cnpj;
+
+  /**
+   * O telefone da imobiliária.
+   */
   private String telefone;
+
+  /**
+   * O email da imobiliária.
+   */
+  @Column(unique = true)
   private String email;
 
-  @OneToMany(mappedBy = "imobiliaria", cascade = CascadeType.ALL)
+  /**
+   * O endereço da imobiliária.
+   */
+  @ManyToOne
+  @JoinColumn(name = "endereco_id")
+  private Endereco endereco;
+
+  /**
+   * A lista de corretores associados à imobiliária.
+   */
+  @OneToMany(mappedBy = "imobiliaria")
   private List<Corretor> corretores;
 
-
-	public Imobiliaria() {
-	}
-
-	public Imobiliaria(final Long id, final String nome, final String cnpj, final String telefone, final String email, final List<Corretor> corretores) {
-		this.id = id;
-		this.nome = nome;
-		this.cnpj = cnpj;
-		this.telefone = telefone;
-		this.email = email;
-		this.corretores = corretores;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(final Long id) {
-		this.id = id;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(final String nome) {
-		this.nome = nome;
-	}
-
-	public String getCnpj() {
-		return cnpj;
-	}
-
-	public void setCnpj(final String cnpj) {
-		this.cnpj = cnpj;
-	}
-
-	public String getTelefone() {
-		return telefone;
-	}
-
-	public void setTelefone(final String telefone) {
-		this.telefone = telefone;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(final String email) {
-		this.email = email;
-	}
-
-	public List<Corretor> getCorretores() {
-		return corretores;
-	}
-
-	public void setCorretores(final List<Corretor> corretores) {
-		this.corretores = corretores;
-	}
+  /**
+   * O usuário associado à imobiliária.
+   */
+  @OneToOne
+  @JoinColumn(name = "usuario_id")
+  private Usuario usuario;
 }

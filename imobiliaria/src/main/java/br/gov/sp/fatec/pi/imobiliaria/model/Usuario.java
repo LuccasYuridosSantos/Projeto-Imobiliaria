@@ -1,77 +1,137 @@
 package br.gov.sp.fatec.pi.imobiliaria.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
- * A classe Usuario representa um usuário da aplicação.
+ * A classe Usuario representa um usuário do sistema.
  */
 @Entity
-@Table(name = "usuario")
-public class Usuario {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class Usuario implements UserDetails {
 
-    /**
-     * O id do usuário.
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
-     * O nome de usuário utilizado para realizar login.
+     * O nome do usuário.
      */
-    @Column(name = "username", length = 20, nullable = false, unique = true)
+    private String name;
+
+    /**
+     * O nome de usuário para autenticação.
+     */
+    @Column(unique = true)
     private String username;
 
     /**
      * A senha do usuário.
      */
-    @Column(name = "senha", length = 100, nullable = false)
-    private String senha;
+    private String password;
 
     /**
-     * Construtor padrão.
+     * O cliente associado ao usuário.
      */
-    public Usuario() {}
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private Cliente cliente;
 
     /**
-     * Construtor que inicializa um usuário com nome, nome de usuário e senha.
-     * @param id O codigo de registro na base.
-     * @param username O nome de usuário utilizado para realizar login.
-     * @param senha A senha do usuário.
+     * A imobiliária associada ao usuário.
      */
-    public Usuario(final Long id, final String username, final String senha) {
-        this.id = id;
-        this.username = username;
-        this.senha = senha;
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private Imobiliaria imobiliaria;
+
+    /**
+     * As autoridades do usuário.
+     */
+    private String authorities;
+
+    public Usuario(final Usuario usuario) {
+        this.username = usuario.getUsername();
+        this.password = usuario.getPassword();
     }
 
-    public Long getId() {
-        return id;
+    /**
+     * Retorna as autoridades do usuário.
+     *
+     * @return A lista de autoridades do usuário.
+     */
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Arrays.stream(authorities.split(","))
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 
-    public void setId(final Long id) {
-        this.id = id;
+    /**
+     * Retorna a senha do usuário.
+     *
+     * @return A senha do usuário.
+     */
+    @Override
+    public String getPassword() {
+        return this.password;
     }
 
-    public String getUsername() {
-        return username;
+    /**
+     * Verifica se a conta do usuário está expirada.
+     *
+     * @return true se a conta não estiver expirada, false caso contrário.
+     */
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
     }
 
-    public void setUsername(final String username) {
-        this.username = username;
+    /**
+     * Verifica se a conta do usuário está bloqueada.
+     *
+     * @return true se a conta não estiver bloqueada, false caso contrário.
+     */
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
     }
 
-    public String getSenha() {
-        return senha;
+    /**
+     * Verifica se as credenciais do usuário estão expiradas.
+     *
+     * @return true se as credenciais não estiverem expiradas, false caso contrário.
+     */
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
 
-    public void setSenha(final String senha) {
-        this.senha = senha;
+    /**
+     * Verifica se o usuário está habilitado.
+     *
+     * @return true se o usuário estiver habilitado, false caso contrário.
+     */
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
-
