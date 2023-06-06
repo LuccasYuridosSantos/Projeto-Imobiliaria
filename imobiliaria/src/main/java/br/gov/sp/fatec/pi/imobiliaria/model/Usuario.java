@@ -67,6 +67,11 @@ public class Usuario implements UserDetails {
      * As autoridades do usuário.
      */
     private String authorities;
+    
+    /**
+     * token do usuário.
+     */
+    private String token;
 
     public Usuario(final Usuario usuario) {
         this.username = usuario.getUsername();
