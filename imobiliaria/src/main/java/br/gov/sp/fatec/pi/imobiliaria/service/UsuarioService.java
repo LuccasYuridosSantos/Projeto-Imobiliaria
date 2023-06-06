@@ -138,4 +138,32 @@ public class UsuarioService {
   public PasswordEncoder passwordEncoder() {
     return PasswordEncoderFactories.createDelegatingPasswordEncoder();
   }
+  
+  
+   /**
+    * Realiza o login de um usuário.
+    *
+    * @param login O objeto contendo os dados de login do usuário.
+    * @return Um Optional contendo o objeto de resposta com informações do usuário logado, se o login for bem-sucedido.
+    *         Caso contrário, retorna um Optional vazio.
+   */
+   public Optional<UsuarioResponse> logar(final UsuarioRequest login){
+        var encoder =  passwordEncoder();
+        Optional<Usuario> usuario = repository.findByUsername(login.getUsername());
+
+        if(funcionario.isPresent()){
+            if (encoder.matches(login.getPassword(),usuario.get().getPassword())) {
+
+                String auth = login.getUsername()+":"+login.getPassword();
+                byte[] encodeAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.US_ASCII));
+                String authHeader = "Basic "+new String(encodeAuth);
+                final var response = mappers.map(usuario);
+                response.setToken(authHeader);
+
+                return Optional.ofNullable(response):
+            }
+        }
+
+        return Optional.empty();
+    }
 }
