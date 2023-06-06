@@ -49,4 +49,11 @@ public class UsuarioResponse {
   @JsonIgnore
   @JsonProperty
   private ImobiliariaResponse imobiliaria;
+  
+  /**
+   * O token do usuário.
+   */
+  @JsonIgnore
+  @JsonProperty
+  private String token;
 }
