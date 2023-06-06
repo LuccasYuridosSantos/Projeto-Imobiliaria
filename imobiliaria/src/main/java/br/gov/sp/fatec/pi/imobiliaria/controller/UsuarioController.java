@@ -100,4 +100,17 @@ public class UsuarioController {
     usuarioService.deleteUsuarioComId(id);
     return ResponseEntity.noContent().build();
   }
+  
+  /**
+   * Realiza o login de um usuário.
+   *
+   * @param request O objeto contendo os dados de login do usuário.
+   * @return Um ResponseEntity contendo o objeto de resposta com informações do usuário logado, se o login for bem-sucedido.
+   *         Caso contrário, retorna um ResponseEntity com status HTTP UNAUTHORIZED (401).
+   */
+  @PostMapping("/logar")
+  public ResponseEntity<UsuarioResponse> logarUsuario(@RequestBody final UsuarioRequest request){
+    return usuarioService.logar(user).map(resp -> ResponseEntity.ok().body(resp))
+                .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+  }    
 }
